@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 
 public abstract class Sprite {
 	
@@ -29,7 +30,15 @@ public abstract class Sprite {
 	
 	public abstract void act();
 
-	
-	
+
+	public bitmap loadImage (Drawable d) {
+		int x = d.getIntrinsicHeight();
+		int y = d.getIntrinsicHeight();
+		Bitmap bitmap = Bitmap.createBitmap(x, y, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
+		d.setBounds(0, 0, x, y);
+		d.draw(canvas);
+		return bitmap;
+	}
 
 }
