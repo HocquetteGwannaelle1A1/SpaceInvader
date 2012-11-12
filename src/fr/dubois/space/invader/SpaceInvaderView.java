@@ -32,6 +32,8 @@ public class SpaceInvaderView extends View {
 
 	private Paint paint; // Style pour le texte	
 	private String text; // texte à afficher
+	private Bitmap alienBitmap; // champ alien
+	private Alien alien; // nouveau champ alien
 
 
 	public SpaceInvaderView(Context context) {
@@ -60,6 +62,9 @@ public class SpaceInvaderView extends View {
 		paint.setTextSize(36);
 		paint.setTextAlign(Paint.Align.CENTER);
 		text = "Texte";
+		alienBitmap = loadImage(R.drawable.alien1);
+		alien = new Alien(alienBitmap, 0, 0);
+		
 	}
 
 
@@ -74,6 +79,7 @@ public class SpaceInvaderView extends View {
 		super.onDraw(canvas);
 		canvas.drawRGB(0, 0, 0);
 		canvas.drawRect(0, 0, TARGET_WIDTH-1, TARGET_HEIGHT-1, paint);
+		canvas.drawBitmap(alienBitmap, 0, 0, paint);
 		if (text != null){
 			canvas.drawText(text, canvas.getWidth()/2,canvas.getHeight()/2, paint);
 		}
@@ -102,12 +108,27 @@ public class SpaceInvaderView extends View {
 	public Bitmap loadImage (int idResource) {
 		Resources r = this.getContext().getResources();
 		Drawable drawable = r.getDrawable(idResource);
-		int x = drawable.getIntrinsicHeight();
-		int y = drawable.getIntrinsicWidth();
+		int y = drawable.getIntrinsicHeight();
+		int x = drawable.getIntrinsicWidth();
 		Bitmap bitmap = Bitmap.createBitmap(x, y, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
 		drawable.setBounds(0, 0, x, y);
 		drawable.draw(canvas);
 		return bitmap;
+	}
+	
+	class Alien extends Sprite {
+
+		public Alien(Bitmap bitmap, float x, float y) {
+			super(bitmap, x, y);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public void act() {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 }
