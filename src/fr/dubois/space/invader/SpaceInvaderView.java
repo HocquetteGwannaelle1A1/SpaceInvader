@@ -7,7 +7,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -31,6 +33,8 @@ public class SpaceInvaderView extends View {
 
 	private Paint paint; // Style pour le texte	
 	private String text; // texte à afficher
+	private Bitmap alienBitmap; // nouveau champs de type Bitmap
+	private Alien alien; //nouveau champs de type Alien
 
 
 	public SpaceInvaderView(Context context) {
@@ -59,6 +63,9 @@ public class SpaceInvaderView extends View {
 		paint.setTextSize(36);
 		paint.setTextAlign(Paint.Align.CENTER);
 		text = "Texte";
+		alienBitmap = loadImage(R.drawable.alien1);
+		alien = new Alien(alienBitmap, 0 ,0);
+		
 	}
 
 
@@ -73,6 +80,7 @@ public class SpaceInvaderView extends View {
 		super.onDraw(canvas);
 		canvas.drawRGB(0, 0, 0);
 		canvas.drawRect(0, 0, TARGET_WIDTH-1, TARGET_HEIGHT-1, paint);
+		canvas.drawBitmap(alienBitmap,0,0,paint);
 		if (text != null){
 			canvas.drawText(text, canvas.getWidth()/2,canvas.getHeight()/2, paint);
 		}
@@ -96,6 +104,21 @@ public class SpaceInvaderView extends View {
 		int x = computeSize(widthMeasureSpec,TARGET_WIDTH);
 		int y = computeSize(heightMeasureSpec,TARGET_HEIGHT);
 		this.setMeasuredDimension(x,y);
+	}
+	
+	// Method loadImage
+	
+	public Bitmap loadImage (int idResource) {
+		Resources r = this.getContext().getResources();
+		Drawable drawable = r.getDrawable(idResource);
+		int y=drawable.getIntrinsicHeight();
+		int x=drawable.getIntrinsicWidth();
+	    Bitmap bitmap = Bitmap.createBitmap(x, y, Bitmap.Config.ARGB_8888);
+	    Canvas canvas = new Canvas(bitmap);
+	    drawable.setBounds(0, 0, x, y);
+	    drawable.draw(canvas);
+	    
+	    return bitmap;
 	}
 
 }
