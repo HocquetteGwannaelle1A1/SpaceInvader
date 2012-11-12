@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -98,4 +99,15 @@ public class SpaceInvaderView extends View {
 		this.setMeasuredDimension(x,y);
 	}
 
+	public Bitmap loadImage (int idResource) {
+		Resources r = this.getContext().getResources();
+		Drawable drawable = r.getDrawable(idResource);
+		int x = drawable.getIntrinsicHeight();
+		int y = drawable.getIntrinsicWidth();
+		Bitmap bitmap = Bitmap.createBitmap(x, y, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
+		drawable.setBounds(0, 0, x, y);
+		drawable.draw(canvas);
+		return bitmap;
+	}
 }
