@@ -25,7 +25,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public class SpaceInvaderView extends View {
-	
+
 	// Dimensions souhaitées
 	private static final int TARGET_HEIGHT = 800;
 	private static final int TARGET_WIDTH = 600;
@@ -52,7 +52,7 @@ public class SpaceInvaderView extends View {
 	}
 
 
-	
+
 
 	void init(){
 		paint = new Paint();
@@ -64,7 +64,8 @@ public class SpaceInvaderView extends View {
 		text = "Texte";
 		alienBitmap = loadImage(R.drawable.alien1);
 		alien = new Alien(alienBitmap, 0, 0);
-		
+		update();
+
 	}
 
 
@@ -75,6 +76,7 @@ public class SpaceInvaderView extends View {
 
 
 	@Override
+	//Kevin
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		canvas.drawRGB(0, 0, 0);
@@ -105,6 +107,7 @@ public class SpaceInvaderView extends View {
 		this.setMeasuredDimension(x,y);
 	}
 
+	//Gwanaelle
 	public Bitmap loadImage (int idResource) {
 		Resources r = this.getContext().getResources();
 		Drawable drawable = r.getDrawable(idResource);
@@ -116,19 +119,29 @@ public class SpaceInvaderView extends View {
 		drawable.draw(canvas);
 		return bitmap;
 	}
-	
-	class Alien extends Sprite {
 
-		public Alien(Bitmap bitmap, float x, float y) {
-			super(bitmap, x, y);
-			// TODO Auto-generated constructor stub
-		}
+	//Jerome
+	private RefreshHandler mRedrawHandler = new RefreshHandler();
 
-		@Override
-		public void act() {
-			// TODO Auto-generated method stub
+		class RefreshHandler extends Handler {
 			
+			@Override
+			public void handleMessage(Message msg) {
+			SpaceInvaderView.this.update();
+			SpaceInvaderView.this.invalidate();
 		}
-		
-	}
+
+		public void sleep (long delayMillis) {
+			this.removeMessages(0);
+			sendMessageDelayed(obtainMessage(0), delayMillis);
+		}
+
+	};
+
+	public void update() {
+		// TODO Auto-generated method stub
+		//kevin
+		mRedrawHandler.sleep(40);
+	};
+
 }
