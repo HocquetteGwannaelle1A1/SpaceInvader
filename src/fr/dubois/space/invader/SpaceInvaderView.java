@@ -1,6 +1,7 @@
+
+
+
 package fr.dubois.space.invader;
-
-
 
 import java.util.Date;
 import java.util.HashSet;
@@ -26,122 +27,116 @@ import android.view.View;
 
 public class SpaceInvaderView extends View {
 
-	// Dimensions souhaitées
-	private static final int TARGET_HEIGHT = 800;
-	private static final int TARGET_WIDTH = 600;
+ // Dimensions souhaitées
+ private static final int TARGET_HEIGHT = 800;
+ private static final int TARGET_WIDTH = 600;
 
-	private Paint paint; // Style pour le texte	
-	private String text; // texte à afficher
-	private Bitmap alienBitmap; // champ alien
-	private Alien alien; // nouveau champ alien
+ private Paint paint; // Style pour le texte 
+private String text; // texte � afficher
+ //===============================================================gwannaelle
+ private Bitmap alienBitmap; // champ alien 
+private Alien alien; // nouveau champ alien 
+//========================================================================
+ public SpaceInvaderView(Context context) {
+ super(context);
+ init();
+ }
 
+ public SpaceInvaderView(Context context, AttributeSet attrs, int defStyle) {
+ super(context, attrs, defStyle);
+ init();
+ }
 
-	public SpaceInvaderView(Context context) {
-		super(context);
-		init();
-	}
+ public SpaceInvaderView(Context context, AttributeSet attrs) {
+ super(context, attrs);
+ init();
+ }
 
-	public SpaceInvaderView(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		init();
-	}
+ void init(){
+ paint = new Paint();
+ paint.setStyle(Style.STROKE);
+ paint.setColor(Color.YELLOW);
+ paint.setTypeface(Typeface.SANS_SERIF);
+ paint.setTextSize(36);
+ paint.setTextAlign(Paint.Align.CENTER);
+ text = "Texte";
+ //==========================================================jerome
+ alienBitmap = loadImage(R.drawable.alien1);
+ alien = new Alien(alienBitmap, 0, 0);
+ update();
 
-	public SpaceInvaderView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		init();
-	}
+ }
+ //=====================================================================
 
+ @Override
+ //=======================================================================Kevin
+ protected void onDraw(Canvas canvas) {
+ super.onDraw(canvas);
+ canvas.drawRGB(0, 0, 0);
+ canvas.drawRect(0, 0, TARGET_WIDTH-1, TARGET_HEIGHT-1, paint);
+ //canvas.drawBitmap(alienBitmap, 0, 0, paint);
+ alien.draw(canvas); // ==== gwannaelle et monsieur dubois
+ if (text != null){
+ canvas.drawText(text, canvas.getWidth()/2,canvas.getHeight()/2, paint);
+ }
+ }
+ //=================================================================================
 
+ private int computeSize(int spec,int def){
+ int mode = View.MeasureSpec.getMode(spec);
+ if (mode == View.MeasureSpec.UNSPECIFIED) return def;
+ int size = View.MeasureSpec.getSize(spec);
+ if (mode == View.MeasureSpec.EXACTLY) {
+ return size;
+ }
+ // MeasureSpec.AT_MOST
+ if (size < def ) return size;
+ return def;
+ }
 
+ @Override
+ protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+ int x = computeSize(widthMeasureSpec,TARGET_WIDTH);
+ int y = computeSize(heightMeasureSpec,TARGET_HEIGHT);
+ this.setMeasuredDimension(x,y);
+ }
 
-	void init(){
-		paint = new Paint();
-		paint.setStyle(Style.STROKE);
-		paint.setColor(Color.YELLOW);
-		paint.setTypeface(Typeface.SANS_SERIF);
-		paint.setTextSize(36);
-		paint.setTextAlign(Paint.Align.CENTER);
-		text = "Texte";
-		alienBitmap = loadImage(R.drawable.alien1);
-		alien = new Alien(alienBitmap, 0, 0);
-		update();
+ //===================================================================Gwanaelle
+ public Bitmap loadImage (int idResource) {
+ Resources r = this.getContext().getResources();
+ Drawable drawable = r.getDrawable(idResource);
+ int y = drawable.getIntrinsicHeight();
+ int x = drawable.getIntrinsicWidth();
+ Bitmap bitmap = Bitmap.createBitmap(x, y, Bitmap.Config.ARGB_8888);
+ Canvas canvas = new Canvas(bitmap);
+ drawable.setBounds(0, 0, x, y);
+ drawable.draw(canvas);
+ return bitmap;
+ }
 
-	}
+ //=================================================================Jerome
+ private RefreshHandler mRedrawHandler = new RefreshHandler();
 
+ class RefreshHandler extends Handler {
 
+ @Override
+ public void handleMessage(Message msg) {
+ SpaceInvaderView.this.update();
+ SpaceInvaderView.this.invalidate();
+ }
 
+ public void sleep (long delayMillis) {
+ this.removeMessages(0);
+ sendMessageDelayed(obtainMessage(0), delayMillis);
+ }
 
+ }
 
-
-
-
-	@Override
-	//Kevin
-	protected void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
-		canvas.drawRGB(0, 0, 0);
-		canvas.drawRect(0, 0, TARGET_WIDTH-1, TARGET_HEIGHT-1, paint);
-		canvas.drawBitmap(alienBitmap, 0, 0, paint);
-		if (text != null){
-			canvas.drawText(text, canvas.getWidth()/2,canvas.getHeight()/2, paint);
-		}
-	}
-
-
-	private int computeSize(int spec,int def){
-		int mode = View.MeasureSpec.getMode(spec);
-		if (mode == View.MeasureSpec.UNSPECIFIED) return def;
-		int size = View.MeasureSpec.getSize(spec);
-		if (mode == View.MeasureSpec.EXACTLY) {
-			return size;
-		}
-		//		MeasureSpec.AT_MOST
-		if (size < def ) return size;
-		return def;
-	}
-
-	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		int x = computeSize(widthMeasureSpec,TARGET_WIDTH);
-		int y = computeSize(heightMeasureSpec,TARGET_HEIGHT);
-		this.setMeasuredDimension(x,y);
-	}
-
-	//Gwanaelle
-	public Bitmap loadImage (int idResource) {
-		Resources r = this.getContext().getResources();
-		Drawable drawable = r.getDrawable(idResource);
-		int y = drawable.getIntrinsicHeight();
-		int x = drawable.getIntrinsicWidth();
-		Bitmap bitmap = Bitmap.createBitmap(x, y, Bitmap.Config.ARGB_8888);
-		Canvas canvas = new Canvas(bitmap);
-		drawable.setBounds(0, 0, x, y);
-		drawable.draw(canvas);
-		return bitmap;
-	}
-
-	//Jerome
-	private RefreshHandler mRedrawHandler = new RefreshHandler();
-
-		class RefreshHandler extends Handler {
-			
-			@Override
-			public void handleMessage(Message msg) {
-			SpaceInvaderView.this.update();
-			SpaceInvaderView.this.invalidate();
-		}
-
-		public void sleep (long delayMillis) {
-			this.removeMessages(0);
-			sendMessageDelayed(obtainMessage(0), delayMillis);
-		}
-
-	};
-
-	public void update() {
-		// TODO Auto-generated method stub
-		//kevin
-		mRedrawHandler.sleep(40);
-	};
-
+ public void update() {
+ // TODO Auto-generated method stub
+ //=======================================================kevin et jerome
+ alien.act();
+ mRedrawHandler.sleep(40);
+ }
+ // =======================================================================
 }
