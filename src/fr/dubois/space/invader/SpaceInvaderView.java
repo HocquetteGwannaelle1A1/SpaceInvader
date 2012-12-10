@@ -1,12 +1,10 @@
+
 package fr.dubois.space.invader;
-
-
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -26,17 +24,18 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public class SpaceInvaderView extends View {
-	
+
 	// Dimensions souhaitées
 	private static final int TARGET_HEIGHT = 800;
 	private static final int TARGET_WIDTH = 600;
 
-	private Paint paint; // Style pour le texte	
-	private String text; // texte à afficher
-	private Bitmap alienBitmap; // nouveau champs de type Bitmap
-	private Alien alien; //nouveau champs de type Alien
-
-
+	private Paint paint; // Style pour le texte 
+	private String text; // texte � afficher
+	//===============================================================gwannaelle
+	private Bitmap alienBitmap; // champ alien 
+	private Alien alien; // nouveau champ alien
+	
+	//========================================================================
 	public SpaceInvaderView(Context context) {
 		super(context);
 		init();
@@ -52,9 +51,6 @@ public class SpaceInvaderView extends View {
 		init();
 	}
 
-
-	
-
 	void init(){
 		paint = new Paint();
 		paint.setStyle(Style.STROKE);
@@ -63,28 +59,28 @@ public class SpaceInvaderView extends View {
 		paint.setTextSize(36);
 		paint.setTextAlign(Paint.Align.CENTER);
 		text = "Texte";
+		//==========================================================jerome
 		alienBitmap = loadImage(R.drawable.alien1);
-		alien = new Alien(alienBitmap, 0 ,0);
-		
+		alien = new Alien(alienBitmap, 0, 0);
+		update();
+
 	}
-
-
-
-
-
-
+	//=====================================================================
 
 
 	@Override
+	//=======================================================================Kevin
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		canvas.drawRGB(0, 0, 0);
 		canvas.drawRect(0, 0, TARGET_WIDTH-1, TARGET_HEIGHT-1, paint);
-		canvas.drawBitmap(alienBitmap,0,0,paint);
+		//canvas.drawBitmap(alienBitmap, 0, 0, paint);
+		alien.draw(canvas); // ==== gwannaelle et monsieur dubois
 		if (text != null){
 			canvas.drawText(text, canvas.getWidth()/2,canvas.getHeight()/2, paint);
 		}
 	}
+	//=================================================================================
 
 
 	private int computeSize(int spec,int def){
@@ -94,7 +90,7 @@ public class SpaceInvaderView extends View {
 		if (mode == View.MeasureSpec.EXACTLY) {
 			return size;
 		}
-		//		MeasureSpec.AT_MOST
+		// MeasureSpec.AT_MOST
 		if (size < def ) return size;
 		return def;
 	}
@@ -105,20 +101,45 @@ public class SpaceInvaderView extends View {
 		int y = computeSize(heightMeasureSpec,TARGET_HEIGHT);
 		this.setMeasuredDimension(x,y);
 	}
-	
-	// Method loadImage
-	
+
+	//===================================================================Gwanaelle
 	public Bitmap loadImage (int idResource) {
 		Resources r = this.getContext().getResources();
 		Drawable drawable = r.getDrawable(idResource);
-		int y=drawable.getIntrinsicHeight();
-		int x=drawable.getIntrinsicWidth();
-	    Bitmap bitmap = Bitmap.createBitmap(x, y, Bitmap.Config.ARGB_8888);
-	    Canvas canvas = new Canvas(bitmap);
-	    drawable.setBounds(0, 0, x, y);
-	    drawable.draw(canvas);
-	    
-	    return bitmap;
+		int y = drawable.getIntrinsicHeight();
+		int x = drawable.getIntrinsicWidth();
+		Bitmap bitmap = Bitmap.createBitmap(x, y, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
+		drawable.setBounds(0, 0, x, y);
+		drawable.draw(canvas);
+		return bitmap;
 	}
 
+	//=================================================================Jerome
+	private RefreshHandler mRedrawHandler = new RefreshHandler();
+
+	class RefreshHandler extends Handler {
+
+		@Override
+		public void handleMessage(Message msg) {
+			SpaceInvaderView.this.update();
+			SpaceInvaderView.this.invalidate();
+		}
+
+		public void sleep (long delayMillis) {
+			this.removeMessages(0);
+			sendMessageDelayed(obtainMessage(0), delayMillis);
+		}
+
+	}
+
+	public void update() {
+		// TODO Auto-generated method stub
+		//=======================================================kevin et jerome
+		alien.act();
+		mRedrawHandler.sleep(40);
+	}
+	// =======================================================================
 }
+
+
