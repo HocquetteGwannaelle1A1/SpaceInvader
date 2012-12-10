@@ -1,5 +1,7 @@
 package fr.dubois.space.invader;
 
+
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -32,3 +34,9 @@ public abstract class Sprite {
 
 
 	}
+
+
+
+
+
+

@@ -2,6 +2,7 @@ package fr.dubois.space.invader;
 
 import android.graphics.Bitmap;
 
+
 class Alien extends Sprite {
 
 	public Alien(Bitmap bitmap, float x, float y) {
@@ -14,4 +15,5 @@ class Alien extends Sprite {
 		// TODO Auto-generated method stub
 		x = x+2;
 	}
+
 }
